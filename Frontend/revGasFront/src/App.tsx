@@ -12,35 +12,33 @@ import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import React from "react";
 import { useState } from "react";
-import axios from 'axios';
+import axios from "axios";
+
+const api = "http://127.0.0.1:8000";
 
 interface Bank {
-  name: string;
-  code: string;
+  codigo: string;
+  instituicao: string;
 }
 
 function App() {
   const [searchResults, setSearchResults] = useState<Bank[]>([]);
   const [isError, setIsError] = useState<boolean>(false);
+  const [searchValue, setSearchValue] = useState<string>("");
 
-  const banks: Bank[] = [
-    { name: "Banco do Brasil", code: "001" },
-    { name: "Caixa Econômica Federal", code: "104" },
-    { name: "Banco Santander", code: "033" },
-    { name: "Banco Itaú", code: "341" },
-    { name: "Banco Bradesco", code: "237" },
-  ]; 
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchValue(event.target.value);
+  };
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    if (searchValue.trim() === "") {
-      setIsError(true);
-      return;
-    }
     try {
-      const response = await axios.get<Bank[]>('https://seu-endpoint.com/bancos');
-      const banks = response.data;
-      const results = banks.filter((bank) => bank.code.includes(searchValue));
+      const response = await axios.get(api + `/bancos/${searchValue}`);
+      let results = response.data;
+      if (!Array.isArray(results)) {
+        results = [results];
+      }
+      results.sort((a: Bank, b: Bank) => parseInt(a.codigo) - parseInt(b.codigo));
       setSearchResults(results);
       setIsError(results.length === 0);
     } catch (error) {
@@ -69,8 +67,8 @@ function App() {
               display: "flex",
               flexDirection: "column",
               gap: 2,
-              width: "50%",
-              height: "50%",
+              width: "70%",
+              height: "70%",
             }}
           >
             <Typography variant="h5">Consulta de Bancos</Typography>
@@ -84,6 +82,8 @@ function App() {
                 variant="outlined"
                 error={isError}
                 helperText={isError ? "Nenhum banco encontrado!" : ""}
+                value={searchValue}
+                onChange={handleInputChange}
               />
               <Button type="submit" variant="contained" color="primary">
                 Pesquisar
@@ -93,7 +93,9 @@ function App() {
               {searchResults.map((result, index) => (
                 <React.Fragment key={index}>
                   <ListItem>
-                    <ListItemText primary={`${result.code} - ${result.name} `} />
+                    <ListItemText
+                      primary={`${result.codigo} - ${result.instituicao} `}
+                    />
                   </ListItem>
                   <Divider />
                 </React.Fragment>
