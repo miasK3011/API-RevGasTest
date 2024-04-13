@@ -12,6 +12,20 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+main {
+  padding: 2vh 2vw;
+}
+
+footer {
+  padding: 2vh 2vw;
+  text-align: center;
+}
+
+a {
+  color: #ff7b00;
+  text-decoration: none;
+}
+
 body {
   margin: 0;
   min-width: 320px;

@@ -38,7 +38,9 @@ function App() {
       if (!Array.isArray(results)) {
         results = [results];
       }
-      results.sort((a: Bank, b: Bank) => parseInt(a.codigo) - parseInt(b.codigo));
+      results.sort(
+        (a: Bank, b: Bank) => parseInt(a.codigo) - parseInt(b.codigo)
+      );
       setSearchResults(results);
       setIsError(results.length === 0);
     } catch (error) {
@@ -49,14 +51,14 @@ function App() {
 
   return (
     <>
-      <div className="App">
+      <main className="App">
         <Container
           sx={{
             display: "flex",
             justifyContent: "center",
             flexDirection: "column",
             alignItems: "center",
-            paddingTop: "2vh",
+            padding: "3vh",
             gap: 2,
           }}
         >
@@ -90,6 +92,7 @@ function App() {
               </Button>
             </FormControl>
             <List>
+              <Typography variant="h6">Resultados: </Typography>
               {searchResults.map((result, index) => (
                 <React.Fragment key={index}>
                   <ListItem>
@@ -102,8 +105,14 @@ function App() {
               ))}
             </List>
           </Card>
+          <footer>
+            <Typography variant="body2" align="center">
+              Desenvolvido por:{" "}
+              <a href="https://github.com/miasK3011" target="_blank" rel="noopener noreferrer">Neemias Calebe</a>
+            </Typography>
+          </footer>
         </Container>
-      </div>
+      </main>
     </>
   );
 }
